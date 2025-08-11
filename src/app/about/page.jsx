@@ -1,14 +1,11 @@
 "use client";
 import React from "react";
 import { Box, Container, Typography, Card, CardContent } from "@mui/material";
-import Navbar from "../components/Navbar";
 import aboutStyles from "./about.style";
 
 export default function About() {
     return (
         <Box>
-            <Navbar />
-
             {/* Hero Section */}
             <Box style={aboutStyles.pageHero}>
                 <Box style={aboutStyles.heroContent}>

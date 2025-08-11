@@ -1,14 +1,12 @@
 "use client";
 import React, { useState } from "react";
 import styles from "./style";
-import Navbar from "./components/Navbar";
 
 export default function Home() {
     const [hover, setHover] = useState(false);
 
     return (
         <>
-            <Navbar />
             <main style={{ minHeight: "100vh", backgroundColor: "#f7fbff", paddingBottom: "4rem" }}>
                 <section style={styles.hero}>
                     <div style={styles.heroOverlay}></div>

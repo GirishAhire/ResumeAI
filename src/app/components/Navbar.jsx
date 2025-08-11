@@ -1,88 +1,163 @@
 "use client";
-import React from "react";
-import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import {
+    AppBar,
+    Toolbar,
+    Typography,
+    Button,
+    IconButton,
+    Menu,
+    MenuItem,
+    Box,
+    useTheme,
+    useMediaQuery,
+} from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
 import { useRouter } from "next/navigation";
-import navbarStyles from "./navbar.style";
+import navbarStyles from "./Navbar.styles";
 
 export default function Navbar() {
+    const theme = useTheme();
+    const styles = navbarStyles(theme);
     const router = useRouter();
 
-    // Hover effect handlers moved here (since inline styles don't support :hover)
-    const handleMouseOver = (e) => {
-        e.currentTarget.style.backgroundColor = "#f0f0f0";
+    // State to track if component is mounted (client)
+    const [mounted, setMounted] = useState(false);
+
+    // Setup isMobile only after mounted to avoid SSR mismatch
+    const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    const [anchorEl, setAnchorEl] = useState(null);
+
+    const navLinks = [
+        { title: "Home", href: "/" },
+        { title: "About", href: "/about" },
+        { title: "Contact", href: "/contact" },
+    ];
+
+    const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
+    const handleMenuClose = () => setAnchorEl(null);
+
+    const handleNavClick = (href) => {
+        router.push(href);
+        handleMenuClose();
     };
 
-    const handleMouseOut = (e) => {
-        e.currentTarget.style.backgroundColor = "transparent";
-    };
-
-    const handleLoginMouseOver = (e) => {
-        e.currentTarget.style.backgroundColor = "#1976d2";
-        e.currentTarget.style.color = "#fff";
-    };
-
-    const handleLoginMouseOut = (e) => {
-        e.currentTarget.style.backgroundColor = "transparent";
-        e.currentTarget.style.color = "#1976d2";
-    };
-
-    const handleSignupMouseOver = (e) => {
-        e.currentTarget.style.backgroundColor = "#1565c0";
-    };
-
-    const handleSignupMouseOut = (e) => {
-        e.currentTarget.style.backgroundColor = "#1976d2";
-    };
+    if (!mounted) {
+        // Prevent rendering during SSR to avoid mismatch
+        return null;
+    }
 
     return (
-        <AppBar position="sticky" elevation={0} style={navbarStyles.navbar}>
-            <Toolbar style={navbarStyles.toolbar}>
+        <AppBar position="static" sx={styles.appBar}>
+            <Toolbar sx={styles.toolbar}>
                 {/* Logo */}
-                <Typography
-                    variant="h5"
-                    style={navbarStyles.logo}
-                    onClick={() => router.push("/")}
-                >
-                    ResumeAI
-                </Typography>
+                <Box sx={styles.logoBox}>
+                    <Typography
+                        variant="h4"
+                        onClick={() => router.push("/")}
+                        sx={styles.logoText}
+                    >
+                        ResumeAI
+                    </Typography>
+                </Box>
 
-                {/* Center Links */}
-                <Box style={navbarStyles.navLinks}>
-                    {["Home", "About", "Contact"].map((page) => (
+                {/* Desktop nav links */}
+                {!isMobile && (
+                    <Box sx={styles.navLinksContainer}>
+                        {navLinks.map(({ title, href }) => (
+                            <Button
+                                key={title}
+                                onClick={() => handleNavClick(href)}
+                                sx={styles.navButton}
+                            >
+                                {title}
+                            </Button>
+                        ))}
+                    </Box>
+                )}
+
+                {/* Login / Sign Up buttons */}
+                {!isMobile && (
+                    <Box sx={styles.authButtonsContainer}>
                         <Button
-                            key={page}
-                            disableRipple
-                            style={navbarStyles.navButton}
-                            onClick={() => router.push(`/${page.toLowerCase() === "home" ? "" : page.toLowerCase()}`)}
-                            onMouseOver={handleMouseOver}
-                            onMouseOut={handleMouseOut}
+                            variant="outlined"
+                            color="primary"
+                            onClick={() => router.push("/login")}
+                            sx={styles.loginButton}
                         >
-                            {page}
+                            Login
                         </Button>
-                    ))}
-                </Box>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => router.push("/signup")}
+                            sx={styles.signupButton}
+                        >
+                            Sign Up
+                        </Button>
+                    </Box>
+                )}
 
-                {/* Auth Buttons */}
-                <Box style={navbarStyles.authButtons}>
-                    <Button
-                        variant="outlined"
-                        style={navbarStyles.loginButton}
-                        onClick={() => router.push("/login")}
-                        onMouseOver={handleLoginMouseOver}
-                        onMouseOut={handleLoginMouseOut}
-                    >
-                        Login
-                    </Button>
-                    <Button
-                        variant="contained"
-                        style={navbarStyles.signupButton}
-                        onClick={() => router.push("/signup")}
-                        onMouseOver={handleSignupMouseOver}
-                        onMouseOut={handleSignupMouseOut}
-                    >
-                        Sign Up
-                    </Button>
-                </Box>
+                {/* Mobile menu */}
+                {isMobile && (
+                    <>
+                        <IconButton
+                            edge="end"
+                            color="inherit"
+                            aria-label="menu"
+                            aria-controls="mobile-menu"
+                            aria-haspopup="true"
+                            onClick={handleMenuOpen}
+                            sx={styles.mobileMenuIcon}
+                        >
+                            <MenuIcon fontSize="large" />
+                        </IconButton>
+
+                        <Menu
+                            id="mobile-menu"
+                            anchorEl={anchorEl}
+                            open={Boolean(anchorEl)}
+                            onClose={handleMenuClose}
+                            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                            transformOrigin={{ vertical: "top", horizontal: "right" }}
+                            keepMounted
+                            sx={{ mt: 1 }}
+                        >
+                            {navLinks.map(({ title, href }) => (
+                                <MenuItem
+                                    key={title}
+                                    onClick={() => handleNavClick(href)}
+                                    sx={styles.mobileMenuItem}
+                                >
+                                    {title}
+                                </MenuItem>
+                            ))}
+                            <MenuItem
+                                onClick={() => {
+                                    handleMenuClose();
+                                    router.push("/login");
+                                }}
+                                sx={styles.mobileMenuItemAuth}
+                            >
+                                Login
+                            </MenuItem>
+                            <MenuItem
+                                onClick={() => {
+                                    handleMenuClose();
+                                    router.push("/signup");
+                                }}
+                                sx={styles.mobileMenuItemAuth}
+                            >
+                                Sign Up
+                            </MenuItem>
+                        </Menu>
+                    </>
+                )}
             </Toolbar>
         </AppBar>
     );

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     Box,
     Container,
@@ -9,10 +9,9 @@ import {
     TextField,
     Button,
 } from "@mui/material";
-import Navbar from "../components/Navbar";
 import styles from "./contact.style";
 
-export default function Contact() {
+export default function ContactUs() {
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -23,10 +22,7 @@ export default function Contact() {
     const [errors, setErrors] = useState({});
     const [submitted, setSubmitted] = useState(false);
 
-    // Validate email format
-    const validateEmail = (email) => {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    };
+    const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
     const validateForm = () => {
         const newErrors = {};
@@ -41,9 +37,11 @@ export default function Contact() {
     };
 
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-        if (errors[e.target.name]) {
-            setErrors({ ...errors, [e.target.name]: "" }); // Clear error on change
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value }));
+
+        if (errors[name]) {
+            setErrors((prev) => ({ ...prev, [name]: "" })); // Clear error on change
         }
     };
 
@@ -51,7 +49,7 @@ export default function Contact() {
         e.preventDefault();
         if (!validateForm()) return;
 
-        // Here you can connect to backend API or service
+        // TODO: Send data to backend/API
 
         setSubmitted(true);
         setFormData({
@@ -63,40 +61,46 @@ export default function Contact() {
         setErrors({});
     };
 
+    // Reset success message after 3 seconds, only on client after submit
+    useEffect(() => {
+        if (submitted) {
+            const timer = setTimeout(() => setSubmitted(false), 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [submitted]);
+
     return (
         <Box>
-            <Navbar />
-
             {/* Hero Section */}
-            <Box style={styles.pageHero}>
-                <Box style={styles.heroContent}>
-                    <Typography style={styles.heroHeading}>Get in Touch</Typography>
-                    <Typography style={styles.heroParagraph}>
+            <Box sx={styles.pageHero}>
+                <Box sx={styles.heroContent}>
+                    <Typography sx={styles.heroHeading}>Get in Touch</Typography>
+                    <Typography sx={styles.heroParagraph}>
                         We’d love to hear from you! Whether you have a question, feedback, or
                         just want to say hi, our team is here to help.
                     </Typography>
                 </Box>
             </Box>
 
-            <Container maxWidth="md" style={{ marginTop: "3rem", marginBottom: "3rem" }}>
+            <Container maxWidth="md" sx={{ mt: 6, mb: 6 }}>
                 {/* Contact Info Cards */}
-                <Box style={styles.cardGrid}>
-                    <Card style={styles.infoCard}>
+                <Box sx={styles.cardGrid}>
+                    <Card sx={styles.infoCard}>
                         <CardContent>
-                            <Typography style={styles.cardTitle}>Email Us</Typography>
-                            <Typography style={styles.cardText}>support@resumeai.com</Typography>
+                            <Typography sx={styles.cardTitle}>Email Us</Typography>
+                            <Typography sx={styles.cardText}>support@resumeai.com</Typography>
                         </CardContent>
                     </Card>
-                    <Card style={styles.infoCard}>
+                    <Card sx={styles.infoCard}>
                         <CardContent>
-                            <Typography style={styles.cardTitle}>Call Us</Typography>
-                            <Typography style={styles.cardText}>+1 (555) 123-4567</Typography>
+                            <Typography sx={styles.cardTitle}>Call Us</Typography>
+                            <Typography sx={styles.cardText}>+1 (555) 123-4567</Typography>
                         </CardContent>
                     </Card>
-                    <Card style={styles.infoCard}>
+                    <Card sx={styles.infoCard}>
                         <CardContent>
-                            <Typography style={styles.cardTitle}>Office</Typography>
-                            <Typography style={styles.cardText}>
+                            <Typography sx={styles.cardTitle}>Office</Typography>
+                            <Typography sx={styles.cardText}>
                                 123 AI Street, Innovation City, Techland
                             </Typography>
                         </CardContent>
@@ -107,11 +111,11 @@ export default function Contact() {
                 <Box
                     component="form"
                     onSubmit={handleSubmit}
-                    style={styles.formContainer}
+                    sx={styles.formContainer}
                     noValidate
                     aria-live="polite"
                 >
-                    <Typography variant="h5" style={styles.formTitle}>
+                    <Typography variant="h5" sx={styles.formTitle}>
                         Send us a message
                     </Typography>
 
@@ -124,7 +128,7 @@ export default function Contact() {
                         required
                         error={Boolean(errors.name)}
                         helperText={errors.name}
-                        style={styles.textField}
+                        sx={styles.textField}
                         autoComplete="name"
                     />
                     <TextField
@@ -137,8 +141,9 @@ export default function Contact() {
                         required
                         error={Boolean(errors.email)}
                         helperText={errors.email}
-                        style={styles.textField}
+                        sx={styles.textField}
                         autoComplete="email"
+                        inputProps={{ suppressHydrationWarning: true }}
                     />
                     <TextField
                         fullWidth
@@ -146,7 +151,7 @@ export default function Contact() {
                         name="subject"
                         value={formData.subject}
                         onChange={handleChange}
-                        style={styles.textField}
+                        sx={styles.textField}
                     />
                     <TextField
                         fullWidth
@@ -159,12 +164,12 @@ export default function Contact() {
                         required
                         error={Boolean(errors.message)}
                         helperText={errors.message}
-                        style={styles.textField}
+                        sx={styles.textField}
                     />
                     <Button
                         type="submit"
                         variant="contained"
-                        style={styles.submitButton}
+                        sx={styles.submitButton}
                         aria-label="Send your message"
                     >
                         Send Message
@@ -172,10 +177,9 @@ export default function Contact() {
 
                     {submitted && (
                         <Typography
-                            style={styles.successMessage}
+                            sx={styles.successMessage}
                             role="alert"
                             tabIndex={0}
-                            onAnimationEnd={() => setSubmitted(false)} // Reset success message after animation
                         >
                             Thank you! Your message has been sent.
                         </Typography>
