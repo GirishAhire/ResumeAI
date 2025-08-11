@@ -1,83 +1,138 @@
 "use client";
-import { Box, Button, Container, TextField, Typography, Avatar, Paper } from "@mui/material";
-import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
+import React from "react";
+import {
+    Box,
+    Button,
+    Container,
+    TextField,
+    Typography,
+    Paper,
+    InputAdornment,
+    Link,
+} from "@mui/material";
+import { Email, Lock, Person } from "@mui/icons-material";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { useRouter } from "next/navigation";
+import { signupStyles } from "./style";
 
-// ✅ Validation schema
-const schema = yup.object({
-    name: yup.string().required("Full name is required"),
-    email: yup.string().email("Invalid email format").required("Email is required"),
-    password: yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
-    confirmPassword: yup
+// ✅ Validation Schema
+const schema = yup.object().shape({
+    name: yup.string().required("Name is required"),
+    email: yup.string().email("Enter a valid email").required("Email is required"),
+    password: yup
         .string()
-        .oneOf([yup.ref("password"), null], "Passwords must match")
-        .required("Confirm Password is required"),
+        .min(6, "Password must be at least 6 characters")
+        .required("Password is required"),
 });
 
 export default function SignupPage() {
-    const { register, handleSubmit, formState: { errors } } = useForm({
-        resolver: yupResolver(schema)
+    const router = useRouter();
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm({
+        resolver: yupResolver(schema),
     });
 
     const onSubmit = (data) => {
-        console.log("Signup Data:", data);
+        // Get existing users or empty array
+        const existingUsers = JSON.parse(localStorage.getItem("users")) || [];
+
+        // Check if email already exists
+        const emailExists = existingUsers.some((user) => user.email === data.email);
+        if (emailExists) {
+            alert("This email is already registered. Please login instead.");
+            return;
+        }
+
+        // Add new user
+        const updatedUsers = [...existingUsers, data];
+
+        // Save back to localStorage
+        localStorage.setItem("users", JSON.stringify(updatedUsers));
+
+        alert("Signup successful!");
+        router.push("/login");
     };
 
     return (
-        <Container component="main" maxWidth="xs">
-            <Paper elevation={6} sx={{ padding: 4, borderRadius: 3, mt: 8 }}>
-                <Box display="flex" flexDirection="column" alignItems="center">
-                    <Avatar sx={{ bgcolor: "secondary.main", mb: 2 }}>
-                        <PersonAddAltIcon />
-                    </Avatar>
-                    <Typography component="h1" variant="h5" sx={{ mb: 3 }}>
-                        Create Account
+        <Box sx={signupStyles.root}>
+            <Container maxWidth="xs">
+                <Paper elevation={8} sx={signupStyles.paper}>
+                    <Typography variant="h4" align="center" sx={signupStyles.title}>
+                        Sign Up
                     </Typography>
 
-                    <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
+                    <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={signupStyles.form}>
+                        {/* Name */}
                         <TextField
-                            {...register("name")}
                             label="Full Name"
                             fullWidth
-                            margin="normal"
+                            {...register("name")}
                             error={!!errors.name}
                             helperText={errors.name?.message}
+                            sx={signupStyles.textField}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <Person />
+                                    </InputAdornment>
+                                ),
+                            }}
                         />
+
+                        {/* Email */}
                         <TextField
-                            {...register("email")}
                             label="Email Address"
                             fullWidth
-                            margin="normal"
+                            {...register("email")}
                             error={!!errors.email}
                             helperText={errors.email?.message}
+                            sx={signupStyles.textField}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <Email />
+                                    </InputAdornment>
+                                ),
+                            }}
                         />
+
+                        {/* Password */}
                         <TextField
-                            {...register("password")}
                             label="Password"
                             type="password"
                             fullWidth
-                            margin="normal"
+                            {...register("password")}
                             error={!!errors.password}
                             helperText={errors.password?.message}
-                        />
-                        <TextField
-                            {...register("confirmPassword")}
-                            label="Confirm Password"
-                            type="password"
-                            fullWidth
-                            margin="normal"
-                            error={!!errors.confirmPassword}
-                            helperText={errors.confirmPassword?.message}
+                            sx={signupStyles.textField}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <Lock />
+                                    </InputAdornment>
+                                ),
+                            }}
                         />
 
-                        <Button type="submit" fullWidth variant="contained" sx={{ mt: 3 }}>
+                        <Button type="submit" fullWidth variant="contained" size="large" sx={signupStyles.button}>
                             Sign Up
                         </Button>
+
+                        {/* Switch to Login */}
+                        <Typography sx={signupStyles.switchText}>
+                            Already have an account?{" "}
+                            <Link component="button" onClick={() => router.push("/login")} underline="hover" sx={signupStyles.link}>
+                                Login
+                            </Link>
+                        </Typography>
                     </Box>
-                </Box>
-            </Paper>
-        </Container>
+                </Paper>
+            </Container>
+        </Box>
     );
 }
