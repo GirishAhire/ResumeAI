@@ -1,192 +1,139 @@
 const styles = {
-    
-    /* ===== NAVBAR ===== */
-        navbar: {
-            backgroundColor: "#ffffff",
-            padding: "0.75rem 2rem",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
-            position: "sticky",
-            top: 0,
-            zIndex: 1000,
-        },
-
-        navLeft: {
-            display: "flex",
-            alignItems: "center",
-            gap: "2rem",
-        },
-
-        navLogo: {
-            fontSize: "1.5rem",
-            fontWeight: "bold",
-            color: "#1976d2",
-            textDecoration: "none",
-        },
-
-        navLinks: {
-            display: "flex",
-            alignItems: "center",
-            gap: "1rem",
-        },
-
-        navLink: {
-            textDecoration: "none",
-            color: "#555",
-            fontSize: "1rem",
-            fontWeight: 500,
-            padding: "0.5rem 0.8rem",
-            borderRadius: "6px",
-            transition: "all 0.3s ease",
-        },
-
-        navLinkHover: {
-            backgroundColor: "#f0f0f0",
-        },
-
-        navRight: {
-            display: "flex",
-            alignItems: "center",
-            gap: "0.75rem",
-        },
-
-        loginBtn: {
-            border: "2px solid #1976d2",
-            color: "#1976d2",
-            backgroundColor: "transparent",
-            fontWeight: "bold",
-            padding: "0.4rem 1rem",
-            borderRadius: "6px",
-            textDecoration: "none",
-            transition: "all 0.3s ease",
-        },
-        loginBtnHover: {
-            backgroundColor: "#1976d2",
-            color: "#fff",
-        },
-
-        signupBtn: {
-            backgroundColor: "#1976d2",
-            color: "#fff",
-            fontWeight: "bold",
-            border: "none",
-            padding: "0.4rem 1rem",
-            borderRadius: "6px",
-            textDecoration: "none",
-            transition: "background-color 0.3s ease",
-        },
-        signupBtnHover: {
-            backgroundColor: "#1565c0",
-        },
-
-        /* ===== HERO SECTION ===== */
-        hero: {
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            textAlign: "center",
-            padding: "4rem 2rem",
-            background: "linear-gradient(135deg, #e3f2fd, #bbdefb)",
-            minHeight: "calc(100vh - 70px)",
-        },
-
-        heroTitle: {
-            fontSize: "2.5rem",
-            fontWeight: "bold",
-            color: "#0d47a1",
-            maxWidth: "700px",
-            marginBottom: "1rem",
-        },
-
-        heroSubtitle: {
-            fontSize: "1.1rem",
-            color: "#333",
-            maxWidth: "600px",
-            marginBottom: "2rem",
-        },
-
-        ctaButton: {
-            backgroundColor: "#1976d2",
-            color: "#fff",
-            padding: "0.8rem 2rem",
-            border: "none",
-            borderRadius: "8px",
-            fontSize: "1rem",
-            fontWeight: "bold",
-            cursor: "pointer",
-            transition: "background-color 0.3s ease",
-        },
-
-        ctaButtonHover: {
-            backgroundColor: "#1565c0",
-        },
-
-
-    /* ===== CARD LAYOUT ===== */
-    cardGrid: {
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-        gap: "1.5rem",
-        marginTop: "2rem",
+    hero: {
+        position: "relative",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        textAlign: "center",
+        padding: "6rem 2rem 4rem",
+        backgroundColor: "#1976d2",
+        color: "#fff",
+        overflow: "hidden",
     },
-    infoCard: {
-        backgroundColor: "#fff",
-        borderRadius: "12px",
-        padding: "1.5rem",
-        boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
-        transition: "transform 0.2s ease, box-shadow 0.2s ease",
-        cursor: "pointer",
+
+    heroOverlay: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        background:
+            "radial-gradient(circle at center, rgba(255, 255, 255, 0.15), transparent 70%)",
+        pointerEvents: "none",
+        zIndex: 0,
     },
-    infoCardHover: {
-        transform: "translateY(-5px)",
-        boxShadow: "0 8px 30px rgba(0,0,0,0.1)",
+
+    heroTitle: {
+        position: "relative",
+        fontSize: "3rem",
+        fontWeight: "900",
+        marginBottom: "1rem",
+        zIndex: 1,
+        maxWidth: "900px",
     },
-    cardTitle: {
-        fontWeight: "bold",
-        fontSize: "1.2rem",
-        marginBottom: "0.5rem",
-        color: "#1976d2",
-    },
-    cardText: {
-        color: "#666",
-        fontSize: "0.95rem",
+
+    heroSubtitle: {
+        position: "relative",
+        fontSize: "1.3rem",
+        fontWeight: "500",
+        maxWidth: "600px",
+        marginBottom: "2.5rem",
+        zIndex: 1,
         lineHeight: "1.5",
     },
 
-    /* ===== FORM PAGES (Login/Signup) ===== */
-    formContainer: {
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        minHeight: "100vh",
-        background: "linear-gradient(135deg, #e0f7fa, #80deea)",
-    },
-    formBox: {
+    ctaButton: {
+        position: "relative",
+        padding: "1rem 3rem",
+        fontSize: "1.2rem",
+        fontWeight: "700",
+        color: "#1976d2",
         backgroundColor: "#fff",
-        padding: "2rem",
-        borderRadius: "12px",
-        boxShadow: "0 8px 30px rgba(0,0,0,0.1)",
-        width: "100%",
-        maxWidth: "400px",
+        border: "none",
+        borderRadius: "50px",
+        cursor: "pointer",
+        boxShadow: "0 6px 15px rgba(25, 118, 210, 0.4)",
+        transition: "all 0.3s ease",
+        zIndex: 1,
     },
-    formTitle: {
+
+    ctaButtonHover: {
+        backgroundColor: "#1565c0",
+        color: "#fff",
+        boxShadow: "0 8px 25px rgba(21, 101, 192, 0.7)",
+        transform: "translateY(-3px)",
+    },
+
+    featuresSection: {
+        padding: "3rem 2rem",
+        maxWidth: "1000px",
+        margin: "0 auto",
         textAlign: "center",
-        fontWeight: "bold",
-        fontSize: "1.8rem",
-        marginBottom: "1.5rem",
+    },
+
+    sectionTitle: {
+        fontSize: "2rem",
+        fontWeight: "900",
+        marginBottom: "2rem",
         color: "#1976d2",
     },
-    textField: {
-        marginBottom: "1rem",
+
+    featuresGrid: {
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+        gap: "2rem",
     },
-    submitButton: {
-        marginTop: "1rem",
-        padding: "0.75rem",
-        fontWeight: "bold",
+
+    featureCard: {
+        backgroundColor: "#fff",
+        padding: "2rem",
+        borderRadius: "16px",
+        boxShadow: "0 4px 20px rgba(25, 118, 210, 0.15)",
+        transition: "transform 0.3s ease, box-shadow 0.3s ease",
+        cursor: "default",
+    },
+
+    featureCardHover: {
+        transform: "translateY(-8px)",
+        boxShadow: "0 12px 40px rgba(21, 101, 192, 0.3)",
+    },
+
+    featureTitle: {
+        fontSize: "1.3rem",
+        fontWeight: "700",
+        color: "#1976d2",
+        marginBottom: "0.5rem",
+    },
+
+    featureText: {
         fontSize: "1rem",
+        color: "#555",
+        lineHeight: "1.6",
+    },
+
+    testimonialSection: {
+        padding: "3rem 2rem",
+        maxWidth: "720px",
+        margin: "4rem auto 6rem",
+        backgroundColor: "#e3f2fd",
+        borderRadius: "16px",
+        boxShadow: "0 4px 20px rgba(25, 118, 210, 0.1)",
+        textAlign: "center",
+    },
+
+    testimonial: {
+        fontStyle: "italic",
+        fontSize: "1.1rem",
+        marginBottom: "1.5rem",
+        color: "#1976d2",
+        lineHeight: "1.5",
+    },
+
+    testimonialAuthor: {
+        fontWeight: "700",
+        fontSize: "1rem",
+        color: "#0d47a1",
     },
 };
 
