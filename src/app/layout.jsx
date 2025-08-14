@@ -22,7 +22,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
+        style={{ display: "flex", flexDirection: "column",}}
       >
         <Navbar />
         <main style={{ flexGrow: 1 }}>{children}</main>

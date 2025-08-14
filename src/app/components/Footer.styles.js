@@ -2,8 +2,8 @@ const useStyles = (theme) => ({
     footer: {
         bgcolor: theme.palette.mode === "dark" ? "#212121" : "#f5f7fa",
         borderTop: `2px solid ${theme.palette.mode === "dark" ? "#222" : "#ddd"}`,
-        py: 5,
-        mt: 8,
+        py: 3,
+        // mt: 8,
         boxShadow:
             theme.palette.mode === "dark"
                 ? "0 0 10px rgba(255,255,255,0.05)"
