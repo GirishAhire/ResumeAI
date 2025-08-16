@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react"; // ✅ add useState
 import {
     Box,
     Button,
@@ -8,9 +8,10 @@ import {
     Typography,
     Paper,
     InputAdornment,
+    IconButton,
     Link,
 } from "@mui/material";
-import { Email, Lock } from "@mui/icons-material";
+import { Email, Lock, Visibility, VisibilityOff } from "@mui/icons-material"; // ✅ add icons
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -25,6 +26,8 @@ const schema = yup.object().shape({
 
 export default function LoginPage() {
     const router = useRouter();
+    const [showPassword, setShowPassword] = useState(false); // ✅ state for toggle
+
     const {
         register,
         handleSubmit,
@@ -35,8 +38,6 @@ export default function LoginPage() {
 
     const onSubmit = (data) => {
         const existingUsers = JSON.parse(localStorage.getItem("users")) || [];
-
-        // Find user by email
         const foundUser = existingUsers.find((user) => user.email === data.email);
 
         if (!foundUser) {
@@ -44,17 +45,14 @@ export default function LoginPage() {
             return;
         }
 
-        // Check password
         if (foundUser.password !== data.password) {
             alert("Incorrect password. Please try again.");
             return;
         }
 
-        // Save current user session
         localStorage.setItem("currentUser", JSON.stringify(foundUser));
-
         alert("Login successful!");
-        router.push("/dashboard"); // redirect after login
+        router.push("/dashboard");
     };
 
     return (
@@ -68,7 +66,7 @@ export default function LoginPage() {
                     <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={loginStyles.form}>
                         {/* Email */}
                         <TextField
-                            label="Email Address"
+                            label="Email Address" 
                             fullWidth
                             {...register("email")}
                             error={!!errors.email}
@@ -83,10 +81,10 @@ export default function LoginPage() {
                             }}
                         />
 
-                        {/* Password */}
+                        {/* ✅ Updated Password with toggle */}
                         <TextField
                             label="Password"
-                            type="password"
+                            type={showPassword ? "text" : "password"}
                             fullWidth
                             {...register("password")}
                             error={!!errors.password}
@@ -98,6 +96,13 @@ export default function LoginPage() {
                                         <Lock />
                                     </InputAdornment>
                                 ),
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                ),
                             }}
                         />
 
@@ -105,10 +110,14 @@ export default function LoginPage() {
                             Login
                         </Button>
 
-                        {/* Switch to Signup */}
                         <Typography sx={loginStyles.switchText}>
                             Don't have an account?{" "}
-                            <Link component="button" onClick={() => router.push("/signup")} underline="hover" sx={loginStyles.link}>
+                            <Link
+                                component="button"
+                                onClick={() => router.push("/signup")}
+                                underline="hover"
+                                sx={loginStyles.link}
+                            >
                                 Sign Up
                             </Link>
                         </Typography>
