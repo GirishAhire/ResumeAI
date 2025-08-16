@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import {
     Box,
     Button,
@@ -9,13 +9,14 @@ import {
     Paper,
     InputAdornment,
     Link,
+    IconButton,
 } from "@mui/material";
-import { Email, Lock, Person } from "@mui/icons-material";
+import { Email, Lock, Person, Visibility, VisibilityOff } from "@mui/icons-material";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useRouter } from "next/navigation";
-import { signupStyles } from "./style";
+import { loginStyles as signupStyles } from "../login/style";
 
 // ✅ Validation Schema
 const schema = yup.object().shape({
@@ -29,6 +30,8 @@ const schema = yup.object().shape({
 
 export default function SignupPage() {
     const router = useRouter();
+    const [showPassword, setShowPassword] = useState(false);
+
     const {
         register,
         handleSubmit,
@@ -38,20 +41,15 @@ export default function SignupPage() {
     });
 
     const onSubmit = (data) => {
-        // Get existing users or empty array
         const existingUsers = JSON.parse(localStorage.getItem("users")) || [];
 
-        // Check if email already exists
         const emailExists = existingUsers.some((user) => user.email === data.email);
         if (emailExists) {
             alert("This email is already registered. Please login instead.");
             return;
         }
 
-        // Add new user
         const updatedUsers = [...existingUsers, data];
-
-        // Save back to localStorage
         localStorage.setItem("users", JSON.stringify(updatedUsers));
 
         alert("Signup successful!");
@@ -104,7 +102,7 @@ export default function SignupPage() {
                         {/* Password */}
                         <TextField
                             label="Password"
-                            type="password"
+                            type={showPassword ? "text" : "password"}
                             fullWidth
                             {...register("password")}
                             error={!!errors.password}
@@ -114,6 +112,13 @@ export default function SignupPage() {
                                 startAdornment: (
                                     <InputAdornment position="start">
                                         <Lock />
+                                    </InputAdornment>
+                                ),
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                                        </IconButton>
                                     </InputAdornment>
                                 ),
                             }}
@@ -126,7 +131,12 @@ export default function SignupPage() {
                         {/* Switch to Login */}
                         <Typography sx={signupStyles.switchText}>
                             Already have an account?{" "}
-                            <Link component="button" onClick={() => router.push("/login")} underline="hover" sx={signupStyles.link}>
+                            <Link
+                                component="button"
+                                onClick={() => router.push("/login")}
+                                underline="hover"
+                                sx={signupStyles.link}
+                            >
                                 Login
                             </Link>
                         </Typography>

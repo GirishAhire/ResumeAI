@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react"; // ✅ add useState
+import React, { useState } from "react";
 import {
     Box,
     Button,
@@ -11,7 +11,7 @@ import {
     IconButton,
     Link,
 } from "@mui/material";
-import { Email, Lock, Visibility, VisibilityOff } from "@mui/icons-material"; // ✅ add icons
+import { Email, Lock, Visibility, VisibilityOff } from "@mui/icons-material";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -26,7 +26,7 @@ const schema = yup.object().shape({
 
 export default function LoginPage() {
     const router = useRouter();
-    const [showPassword, setShowPassword] = useState(false); // ✅ state for toggle
+    const [showPassword, setShowPassword] = useState(false);
 
     const {
         register,
