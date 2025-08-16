@@ -23,7 +23,7 @@ const useStyles = (theme) => ({
     copyText: {
         color: theme.palette.mode === "dark" ? "grey.500" : "text.secondary",
         fontWeight: 700,
-        fontSize: "1.2rem",
+        fontSize: "1.1rem",
         flex: "1 1 300px",
         [theme.breakpoints.down("sm")]: {
             flex: "unset",
