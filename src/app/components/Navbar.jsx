@@ -48,14 +48,12 @@ export default function Navbar() {
     };
 
     if (!mounted) {
-        // Prevent rendering during SSR to avoid mismatch
         return null;
     }
 
     return (
         <AppBar position="static" sx={styles.appBar}>
             <Toolbar sx={styles.toolbar}>
-                {/* Logo */}
                 <Box sx={styles.logoBox}>
                     <Typography
                         variant="h4"
