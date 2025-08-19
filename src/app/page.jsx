@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from "react";
-import styles from "./style";
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
+import styles from "./home.styles";
+import Navbar from "../components/layout/Navbar";
+import Footer from "../components/common/Footer";
 
 export default function Page() {
     const [hover, setHover] = useState(false);

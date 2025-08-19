@@ -2,8 +2,8 @@
 import React from "react";
 import { Box, Container, Typography, Card, CardContent } from "@mui/material";
 import aboutStyles from "./about.style";
-import Footer from "../components/Footer";
-import Navbar from "../components/Navbar";
+import Navbar from "../../components/layout/Navbar";
+import Footer from "../../components/common/Footer";
 
 export default function About() {
     return (
